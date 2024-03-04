@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer')
 
 async function getSportsPage(link) {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   });
   const page = await browser.newPage();
   await page.goto(link);
