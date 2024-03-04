@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { firstPage } = require('../controllers/firstPage')
+const { sports } = require('../controllers/firstPage')
 
-router.post('/getData', firstPage)
+router.post('/sports', sports)
 
 module.exports = router;
+
+
