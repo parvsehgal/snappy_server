@@ -15,6 +15,10 @@ app.use('/', (req, res) => {
   res.send('server is working on vercel')
 })
 
+app.use('/test', (req, res) => {
+  res.send('this is test route')
+})
+
 app.listen(4000, () => {
   console.log("server started on port 4000")
 })
