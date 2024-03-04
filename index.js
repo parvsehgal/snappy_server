@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors')
 app.use(express.json());
 
+const getData = require('./routes/getData.js')
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -11,10 +12,7 @@ app.use(
   })
 );
 
-app.use('/', (req, res) => {
-  res.send('server is working on vercel')
-})
-
+app.use('/api/v1', getData)
 app.use('/test', (req, res) => {
   res.send('this is test route')
 })
