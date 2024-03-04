@@ -13,6 +13,7 @@ app.use(
 );
 
 app.use('/api/v1', getData)
+
 app.use('/test', (req, res) => {
   res.send('this is test route')
 })
