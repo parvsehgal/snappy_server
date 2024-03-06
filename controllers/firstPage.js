@@ -1,25 +1,9 @@
-let chrome = {};
-let puppeteer;
-
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
-  puppeteer = require("puppeteer-core");
-} else {
-  puppeteer = require("puppeteer");
-}
+const puppeteer = require('puppeteer')
 
 async function getSportsPage(link) {
-  let options = {};
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
-      headless: true,
-      ignoreHTTPSErrors: true,
-    };
-  }
-  const browser = await puppeteer.launch(options);
+  const browser = await puppeteer.launch({
+    headless: true,
+  });
   const page = await browser.newPage();
   await page.goto(link);
   const headingData = await page.evaluate(() => {
@@ -27,6 +11,8 @@ async function getSportsPage(link) {
     const list = allElements.map((each) => {
       return ({
         title: each.querySelector('div h2 a').innerText,
+        imgUrl: each.querySelector('div a img').getAttribute('src'),
+        articleLink: each.querySelector('div h2 a').getAttribute('href')
       })
     })
     return list
@@ -37,14 +23,79 @@ async function getSportsPage(link) {
   return (toReturn)
 }
 
-exports.sports = async (req, res) => {
+async function getPoliticsPage(link) {
+  const browser = await puppeteer.launch({
+    headless: true,
+  });
+  const page = await browser.newPage();
+  await page.goto(link);
+  const headingData = await page.evaluate(() => {
+    const allElements = Array.from(document.querySelectorAll('.articles'))
+    const list = allElements.map((each) => {
+      return ({
+        title: each.querySelector('div h2 a').innerText,
+        imgUrl: each.querySelector('div a img').getAttribute('src'),
+        articleLink: each.querySelector('div h2 a').getAttribute('href')
+      })
+    })
+    return list
+  })
+  console.log(headingData)
+  await browser.close()
+  const toReturn = JSON.stringify(headingData)
+  return (toReturn)
+}
+
+async function getEntertainmentPage(link) {
+  const browser = await puppeteer.launch({
+    headless: false,
+  })
+  const page = await browser.newPage();
+  await page.goto(link);
+  const endData = await page.evaluate(() => {
+    const allElements = Array.from(document.querySelectorAll('.articles'))
+    const dataObj = allElements.map((each) => {
+      return ({
+        title: each.querySelector('.img-context .title a').getAttribute('title'),
+        imageUrl: each.querySelector('.snaps a img').getAttribute('src'),
+        articleLink: each.querySelector('.img-context .title a').getAttribute('href'),
+      })
+    })
+    return dataObj
+  })
+  console.log(endData)
+  return (JSON.stringify(endData))
+}
+
+exports.entertainment = async (req, res) => {
   try {
-    const { url } = req.body;
-    console.log(url)
-    const data = await getSportsPage(url)
-    console.log(data)
+    const { url } = req.body
+    const data = await getEntertainmentPage(url)
     res.json(data)
   } catch (err) {
     console.log(err.message)
   }
 }
+
+exports.sports = async (req, res) => {
+  try {
+    const { url } = req.body;
+    console.log(url)
+    const data = await getSportsPage(url)
+    res.json(data)
+  } catch (err) {
+    console.log(err.message)
+  }
+}
+
+exports.politics = async () => {
+  try {
+    const { url } = req.body
+    console.log(url)
+    const data = await getPoliticsPage(url)
+    res.json(data)
+  } catch (err) {
+    console.log(err.message)
+  }
+}
+
