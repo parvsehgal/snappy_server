@@ -48,7 +48,7 @@ async function getPoliticsPage(link) {
 
 async function getEntertainmentPage(link) {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   })
   const page = await browser.newPage();
   await page.goto(link);
@@ -88,7 +88,7 @@ exports.sports = async (req, res) => {
   }
 }
 
-exports.politics = async () => {
+exports.politics = async (req, res) => {
   try {
     const { url } = req.body
     console.log(url)
@@ -98,4 +98,3 @@ exports.politics = async () => {
     console.log(err.message)
   }
 }
-
