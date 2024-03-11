@@ -7,7 +7,8 @@ const { getArticle } = require('../controllers/secondPage')
 router.post('/sports', sports)
 router.post('/politics', politics)
 router.post('/entertainment', entertainment)
-router.post('/article', getArticle)
+
+router.post('/getArticle', getArticle)
 
 module.exports = router;
 
