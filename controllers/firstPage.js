@@ -3,6 +3,7 @@ const puppeteer = require("puppeteer");
 async function getSportsPage(link) {
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: '/snap/bin/chromium',
   });
   const page = await browser.newPage();
   await page.goto(link);
@@ -26,6 +27,7 @@ async function getSportsPage(link) {
 async function getPoliticsPage(link) {
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: '/snap/bin/chromium',
   });
   const page = await browser.newPage();
   await page.goto(link);
@@ -49,6 +51,7 @@ async function getPoliticsPage(link) {
 async function getEntertainmentPage(link) {
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: '/snap/bin/chromium',
   });
   const page = await browser.newPage();
   await page.goto(link);

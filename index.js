@@ -14,8 +14,8 @@ app.use(
 
 app.use('/api/v1', getData)
 
-app.use('/test', (req, res) => {
-  res.send('this is test route')
+app.use('/', (req, res) => {
+  res.send('a monk in the clouds')
 })
 
 app.listen(4000, () => {
